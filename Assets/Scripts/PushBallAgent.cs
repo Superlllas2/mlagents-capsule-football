@@ -55,9 +55,9 @@ public class PushBallAgent : Agent
     {
         ballInTargetZone = false;
 
-        agentRb.velocity = Vector3.zero;
+        agentRb.linearVelocity = Vector3.zero;
         agentRb.angularVelocity = Vector3.zero;
-        ballRb.velocity = Vector3.zero;
+        ballRb.linearVelocity = Vector3.zero;
         ballRb.angularVelocity = Vector3.zero;
 
         // RANDOM SPAWN 2
@@ -86,10 +86,10 @@ public class PushBallAgent : Agent
         sensor.AddObservation(ballToTarget.normalized);
         sensor.AddObservation(ballToTarget.magnitude);
 
-        sensor.AddObservation(agentRb.velocity);
+        sensor.AddObservation(agentRb.linearVelocity);
         sensor.AddObservation(agentRb.angularVelocity);
 
-        sensor.AddObservation(ballRb.velocity);
+        sensor.AddObservation(ballRb.linearVelocity);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
