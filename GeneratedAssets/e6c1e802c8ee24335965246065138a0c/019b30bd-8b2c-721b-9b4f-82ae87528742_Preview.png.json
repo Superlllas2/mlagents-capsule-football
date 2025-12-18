@@ -1,0 +1,11 @@
+{
+    "asset": "e6c1e802c8ee24335965246065138a0c",
+    "fileName": "019b30bd-8b2c-721b-9b4f-82ae87528742_Preview.png",
+    "prompt": "realistic grass texture with small patches of dirt and pebbles",
+    "negativePrompt": "",
+    "model": "44ec3749-963a-44b1-aa54-dc19f6ed8ab2",
+    "modelName": "Unity Texture2D",
+    "customSeed": 578383216,
+    "w3CTraceId": "6e3c8605968823f7b6d345d591d1f718",
+    "refinementMode": "Generation"
+}
