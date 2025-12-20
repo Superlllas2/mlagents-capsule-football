@@ -9,8 +9,6 @@ public class SoccerAgent : Agent
     [SerializeField] private Rigidbody ballRigidbody;
     [SerializeField] private Transform opponentGoal;
     [SerializeField] private Transform ownGoal;
-    [SerializeField] private Transform agentSpawn;
-    [SerializeField] private Transform ballSpawn;
 
     [Header("Movement")]
     [SerializeField] private float moveForce = 18f;
@@ -31,6 +29,8 @@ public class SoccerAgent : Agent
     private Quaternion initialAgentRotation;
     private Vector3 initialBallPosition;
     private Quaternion initialBallRotation;
+    private Transform agentSpawn;
+    private Transform ballSpawn;
 
     private Vector2 moveInput;
     private float turnInput;
@@ -48,6 +48,9 @@ public class SoccerAgent : Agent
             initialBallPosition = ballRigidbody.transform.position;
             initialBallRotation = ballRigidbody.transform.rotation;
         }
+
+        agentSpawn = transform;
+        ballSpawn = ballRigidbody.transform;
     }
 
     private void FixedUpdate()
@@ -87,7 +90,7 @@ public class SoccerAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        Vector3 velocity = agentRigidbody.velocity;
+        Vector3 velocity = agentRigidbody.linearVelocity;
         sensor.AddObservation(new Vector2(velocity.x, velocity.z));
 
         Vector3 forward = transform.forward;
@@ -101,7 +104,7 @@ public class SoccerAgent : Agent
             sensor.AddObservation(ballDirNormalized);
             sensor.AddObservation(toBall2D.magnitude);
 
-            Vector3 ballVelocity = ballRigidbody.velocity;
+            Vector3 ballVelocity = ballRigidbody.linearVelocity;
             sensor.AddObservation(new Vector2(ballVelocity.x, ballVelocity.z));
 
             AddGoalObservation(sensor, opponentGoal);
@@ -227,7 +230,7 @@ public class SoccerAgent : Agent
 
     private void ResetBody(Rigidbody body, Vector3 position, Quaternion rotation)
     {
-        body.velocity = Vector3.zero;
+        body.linearVelocity = Vector3.zero;
         body.angularVelocity = Vector3.zero;
         body.position = position;
         body.rotation = rotation;
