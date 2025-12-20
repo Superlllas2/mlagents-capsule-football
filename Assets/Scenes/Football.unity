@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7857913217653753198, guid: 09e8be2cdb3c04b1b9e5b6b3c08edf83, type: 3}
+      propertyPath: m_TagString
+      value: Ball
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -226,6 +230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 316410710}
   - component: {fileID: 316410711}
+  - component: {fileID: 316410712}
   m_Layer: 7
   m_Name: FootBumper
   m_TagString: Untagged
@@ -269,6 +274,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &316410712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316410709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59eeac1544974cdcb2daa38ecfab045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BumperTrigger
+  agent: {fileID: 1173041164}
+  ballTag: Ball
 --- !u!1 &335467469 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7469979232789056034, guid: 028b8b9f35ef34a7ca37d2c9d7d93213, type: 3}
@@ -596,7 +615,7 @@ GameObject:
   - component: {fileID: 1173041156}
   - component: {fileID: 1173041160}
   - component: {fileID: 1173041163}
-  - component: {fileID: 1173041162}
+  - component: {fileID: 1173041164}
   - component: {fileID: 1173041161}
   m_Layer: 6
   m_Name: Player
@@ -743,22 +762,6 @@ MonoBehaviour:
   DecisionPeriod: 1
   DecisionStep: 0
   TakeActionsBetweenDecisions: 1
---- !u!114 &1173041162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1173041155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.ML-Agents::Unity.MLAgents.Agent
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
 --- !u!114 &1173041163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,6 +793,38 @@ MonoBehaviour:
   m_UseChildActuators: 1
   m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
+--- !u!114 &1173041164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173041155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c41659675f8624b359200c6a26aeed3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoccerAgent
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 1500
+  ballRigidbody: {fileID: 1306898245}
+  opponentGoal: {fileID: 180339427}
+  ownGoal: {fileID: 335467470}
+  moveForce: 18
+  turnTorque: 50
+  kickImpulse: 10
+  dribbleForce: 2
+  forwardDotThreshold: 0.2
+  stepPenalty: -0.0005
+  ballTouchReward: 0.02
+  progressRewardScale: 0.03
+--- !u!54 &1306898245 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 7413829819968083901, guid: 09e8be2cdb3c04b1b9e5b6b3c08edf83, type: 3}
+  m_PrefabInstance: {fileID: 26199488}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1404087700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,6 +1067,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3648405734207872358, guid: 028b8b9f35ef34a7ca37d2c9d7d93213, type: 3}
+      propertyPath: m_Name
+      value: Opponent Goal
+      objectReference: {fileID: 0}
+    - target: {fileID: 3648405734207872358, guid: 028b8b9f35ef34a7ca37d2c9d7d93213, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -1255,6 +1294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1982112394}
   - component: {fileID: 1982112395}
+  - component: {fileID: 1982112396}
   m_Layer: 0
   m_Name: GoalZone
   m_TagString: Untagged
@@ -1298,6 +1338,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.64791673, y: 0.17394456, z: 0.6365602}
   m_Center: {x: 0.0028384624, y: -0.11178733, z: 0.030718124}
+--- !u!114 &1982112396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982112393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8eab97b600c47a9b7a3ea55cfcca85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoalTrigger
+  agent: {fileID: 1173041164}
+  isOpponentGoal: 0
+  ballTag: Ball
 --- !u!1 &1997516968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,6 +1363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1997516969}
   - component: {fileID: 1997516970}
+  - component: {fileID: 1997516971}
   m_Layer: 0
   m_Name: GoalZone
   m_TagString: Untagged
@@ -1351,6 +1407,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.64791673, y: 0.17394456, z: 0.6365602}
   m_Center: {x: 0.0028384624, y: -0.11178733, z: 0.030718124}
+--- !u!114 &1997516971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997516968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8eab97b600c47a9b7a3ea55cfcca85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoalTrigger
+  agent: {fileID: 1173041164}
+  isOpponentGoal: 1
+  ballTag: Ball
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
