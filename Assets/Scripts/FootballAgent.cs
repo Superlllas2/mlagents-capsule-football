@@ -101,9 +101,9 @@ public class SoccerAgent : Agent
         {
             Vector3 toBall = ballRigidbody.position - transform.position;
             Vector2 toBall2D = new Vector2(toBall.x, toBall.z);
-            Vector2 ballDirNormalized = toBall2D.normalized;
+            Vector2 ballDirNormalized = SafeNormalize(toBall2D);
             sensor.AddObservation(ballDirNormalized);
-            sensor.AddObservation(SafeNormalize(toBall2D));
+            sensor.AddObservation(ballDirNormalized);
             sensor.AddObservation(toBall2D.magnitude);
 
             Vector3 ballVelocity = ballRigidbody.linearVelocity;
