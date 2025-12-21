@@ -41,6 +41,7 @@ public class SoccerAgent : Agent
     private void Awake()
     {
         agentRigidbody = GetComponent<Rigidbody>();
+        agentRigidbody.maxAngularVelocity = 20f;
         initialAgentPosition = transform.position;
         initialAgentRotation = transform.rotation;
         if (ballRigidbody != null)

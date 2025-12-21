@@ -21,7 +21,6 @@ behaviors:
     max_steps: 41000000
     time_horizon: 64
     summary_freq: 10000
-
 env_settings:
   num_envs: 1
   seed: -1
