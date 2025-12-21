@@ -1,5 +1,5 @@
 behaviors:
-  PushBall:
+  CapsuleFootball:
     trainer_type: ppo
     hyperparameters:
       learning_rate: 3.0e-4
@@ -11,7 +11,7 @@ behaviors:
       lambd: 0.95
       num_epoch: 3
     network_settings:
-      normalize: true
+      normalize: false
       hidden_units: 256
       num_layers: 2
     reward_signals:
@@ -21,12 +21,11 @@ behaviors:
     max_steps: 41000000
     time_horizon: 64
     summary_freq: 10000
-
 env_settings:
   num_envs: 1
   seed: -1
   base_port: 5005
 
 torch_settings:
-  device: cpu
+  device: cuda
   threads: 16
