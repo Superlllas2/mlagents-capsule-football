@@ -103,6 +103,7 @@ public class SoccerAgent : Agent
             Vector2 toBall2D = new Vector2(toBall.x, toBall.z);
             Vector2 ballDirNormalized = toBall2D.normalized;
             sensor.AddObservation(ballDirNormalized);
+            sensor.AddObservation(SafeNormalize(toBall2D));
             sensor.AddObservation(toBall2D.magnitude);
 
             Vector3 ballVelocity = ballRigidbody.linearVelocity;
@@ -131,8 +132,8 @@ public class SoccerAgent : Agent
     public override void OnActionReceived(ActionBuffers actions)
     {
         var continuousActions = actions.ContinuousActions;
-        moveInput = new Vector2(continuousActions[0], continuousActions[1]);
-        turnInput = continuousActions[2];
+        moveInput = Vector2.ClampMagnitude(new Vector2(continuousActions[0], continuousActions[1]), 1f);
+        turnInput = Mathf.Clamp(continuousActions[2], -1f, 1f);
         kickInput = Mathf.Clamp01(continuousActions[3]);
 
         AddReward(stepPenalty);
@@ -236,6 +237,13 @@ public class SoccerAgent : Agent
         body.position = position;
         body.rotation = rotation;
     }
+    
+    private static Vector2 SafeNormalize(Vector2 v)
+    {
+        float mag = v.magnitude;
+        return mag > 1e-6f ? (v / mag) : Vector2.zero;
+    }
+
 
     private void AddGoalObservation(VectorSensor sensor, Transform goal)
     {
@@ -248,7 +256,7 @@ public class SoccerAgent : Agent
 
         Vector3 toGoal = goal.position - transform.position;
         Vector2 toGoal2D = new Vector2(toGoal.x, toGoal.z);
-        sensor.AddObservation(toGoal2D.normalized);
+        sensor.AddObservation(SafeNormalize(toGoal2D));
         sensor.AddObservation(toGoal2D.magnitude);
     }
 }
