@@ -9,6 +9,8 @@ public class SoccerAgent : Agent
     [SerializeField] private Rigidbody ballRigidbody;
     [SerializeField] private Transform opponentGoal;
     [SerializeField] private Transform ownGoal;
+    [SerializeField] private Transform agentSpawn;
+    [SerializeField] private Transform ballSpawn;
 
     [Header("Movement")]
     [SerializeField] private float moveForce = 18f;
@@ -29,8 +31,6 @@ public class SoccerAgent : Agent
     private Quaternion initialAgentRotation;
     private Vector3 initialBallPosition;
     private Quaternion initialBallRotation;
-    private Transform agentSpawn;
-    private Transform ballSpawn;
 
     private Vector2 moveInput;
     private float turnInput;
@@ -49,9 +49,6 @@ public class SoccerAgent : Agent
             initialBallPosition = ballRigidbody.transform.position;
             initialBallRotation = ballRigidbody.transform.rotation;
         }
-
-        agentSpawn = transform;
-        ballSpawn = ballRigidbody.transform;
     }
 
     private void FixedUpdate()
@@ -62,13 +59,15 @@ public class SoccerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        ResetBody(agentRigidbody, agentSpawn != null ? agentSpawn.position : initialAgentPosition,
-            agentSpawn != null ? agentSpawn.rotation : initialAgentRotation);
+        ResetBody(agentRigidbody,
+            GetFiniteOrFallback(agentSpawn != null ? agentSpawn.position : initialAgentPosition, initialAgentPosition),
+            GetFiniteOrFallback(agentSpawn != null ? agentSpawn.rotation : initialAgentRotation, initialAgentRotation));
 
         if (ballRigidbody != null)
         {
-            ResetBody(ballRigidbody, ballSpawn != null ? ballSpawn.position : initialBallPosition,
-                ballSpawn != null ? ballSpawn.rotation : initialBallRotation);
+            ResetBody(ballRigidbody,
+                GetFiniteOrFallback(ballSpawn != null ? ballSpawn.position : initialBallPosition, initialBallPosition),
+                GetFiniteOrFallback(ballSpawn != null ? ballSpawn.rotation : initialBallRotation, initialBallRotation));
             if (opponentGoal != null)
             {
                 previousBallDistance = Vector3.Distance(ballRigidbody.position, opponentGoal.position);
@@ -101,9 +100,9 @@ public class SoccerAgent : Agent
         {
             Vector3 toBall = ballRigidbody.position - transform.position;
             Vector2 toBall2D = new Vector2(toBall.x, toBall.z);
-            Vector2 ballDirNormalized = toBall2D.normalized;
+            Vector2 ballDirNormalized = SafeNormalize(toBall2D);
             sensor.AddObservation(ballDirNormalized);
-            sensor.AddObservation(SafeNormalize(toBall2D));
+            sensor.AddObservation(ballDirNormalized);
             sensor.AddObservation(toBall2D.magnitude);
 
             Vector3 ballVelocity = ballRigidbody.linearVelocity;
@@ -236,6 +235,26 @@ public class SoccerAgent : Agent
         body.angularVelocity = Vector3.zero;
         body.position = position;
         body.rotation = rotation;
+    }
+
+    private static Vector3 GetFiniteOrFallback(Vector3 candidate, Vector3 fallback)
+    {
+        return IsFinite(candidate) ? candidate : fallback;
+    }
+
+    private static Quaternion GetFiniteOrFallback(Quaternion candidate, Quaternion fallback)
+    {
+        return IsFinite(candidate) ? candidate : fallback;
+    }
+
+    private static bool IsFinite(Vector3 value)
+    {
+        return float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
+    }
+
+    private static bool IsFinite(Quaternion value)
+    {
+        return float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z) && float.IsFinite(value.w);
     }
     
     private static Vector2 SafeNormalize(Vector2 v)
